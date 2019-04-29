@@ -155,10 +155,13 @@ bot.on('message', async (message) => {
 
     if(message.channel.id == "490610018073182209"){
         message.delete();
-        message.guild.createChannel(message.author.tag + "-" + message.author.id).then(ch => {
-            ch.setParent(message.guild.channels.get("490615226014760960"));
+        message.guild.createChannel(message.author.username + "#" + message.author.tag).then(ch => {
+            ch.setParent("490615226014760960");
             ch.overwritePermissions(message.author.id, {
                 SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, READ_MESSAGES: true, VIEW_CHANNEL: true
+            })
+            ch.overwritePermissions(message.author.id, {
+                VIEW_CHANNEL: false
             })
             let embed = new Discord.RichEmbed()
             .setAuthor("New Ticket")
@@ -173,7 +176,7 @@ bot.on('message', async (message) => {
             let embed2 = new Discord.RichEmbed()
             .setDescription("Your ticket is ready in " + ch)
             .setColor("#f4df42");
-            message.channel.send(embed2).then(msg => {msg.delete(10000)});
+            message.channel.send(embed2).then(msg => {msg.delete(5000)});
         })
     }
     //xp system
