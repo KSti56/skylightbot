@@ -103,7 +103,7 @@ bot.on("messageReactionAdd", (reaction) => {
     if(member.bot) return;
     if(reaction.emoji.name === "🇭"){
         reaction.remove(member);
-        if (reaction.emoji.guild.channels.some(c => [`ticket-${user}`].includes(c.name))){
+        if (reaction.message.guild.channels.some(c => [`ticket-${user}`].includes(c.name))) {
             return reaction.message.reply(`You already have a ticket open`).then(async msg => msg.delete(3000))
         }
         reaction.message.guild.createChannel(`ticket-${user}`).then(async ch => {
