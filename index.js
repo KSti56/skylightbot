@@ -51,6 +51,7 @@ fs.readdir("./commands/", (err, files) =>{
 
 bot.on('ready', async () => {
     console.log(bot.user.username + " is now online!!");
+    bot.channels.get("490356148961017866").fetchMessage("490362021506842634")
     bot.user.setActivity("in SkyLightServices!");
     setInterval(function(){
         bot.user.setActivity("in development");
