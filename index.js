@@ -98,8 +98,7 @@ bot.on("messageReactionAdd", (reaction) => {
     if(reaction.message.channel.name !== "apply") return;
 
     const member = reaction.users.last();
-    const nickName = reaction.message.guild.members.get(member.id).username;
-    const user = nickName.toLowerCase().replace(/ /g, "-")
+    const user = reaction.message.guild.members.get(member.id).username;
 
     if(member.bot) return;
     if(reaction.emoji.name === "🇭"){
