@@ -92,56 +92,36 @@ bot.on('raw', async event => {
             }
         })
     }
-    if(channel.id == "490356148961017866"){
-        if(member.id == bot.user.id) return;
-        message.reactions.get(emojiKey).remove(member);
-        const applyRoles = [
-            {role:"Helper", emoji:"🇭", questions: [
-                "Question 1",
-                "Question 2",
-                "Question 3"
-            ]}
-        ];
-        applyRoles.forEach(async element => {
-            if(emojiKey == element.emoji){
-                if(member.roles.has(message.guild.roles.find(r => r.name.toLowerCase() == element.role))) return message.channel.send(member + ", You already have that role!").then(msg => {msg.delete(5000)});
-                if(message.guild.channels.find(ch => ch.name.toLowerCase() == element.role.toLowerCase() + "-" + member.id)) return message.channel.send(member + ", You already have a pending " + element.role + " application!").then(msg => {msg.delete(5000)});
-                message.guild.createChannel(element.role + "-" + member.id, "text").then(async ch => {
-                    ch.setParent(message.guild.channels.get("490358699651629069"));
-                    ch.overwritePermissions(member.id, {
-                        SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, READ_MESSAGES: true, VIEW_CHANNEL: true
-                    })
-                    ch.overwritePermissions(message.guild.id, {
-                      VIEW_CHANNEL: true
-                    })
-                    message.channel.send(member + ", Your " + element.role + " application is ready in " + ch + "!").then(msg => {msg.delete(10000)});
-                    let embed = new Discord.RichEmbed()
-                    .setAuthor("WARNING")
-                    .setColor("#ea2727")
-                    .setDescription("**There is a time limit of 10 minutes for each question!**")
-                    .setTimestamp();
-                    ch.send(embed);
-                    for(let i = 0; i < element.questions.length; i++){
-                        let embed1 = new Discord.RichEmbed()
-                        .setDescription(element.questions[i])
-                        .setColor("#268bea");
-                        ch.send(embed1);
-                        await ch.awaitMessages(m => m.author.id === user.id, { max: 1, time: 600000, errors: ['time'] });
-                    }
-                    let doneEmbed = new Discord.RichEmbed()
-                    .setAuthor("Application Complete")
-                    .setDescription("Your application is over! A staff member will look over your application when available!")
-                    .setColor("#eae025")
-                    .setTimestamp();
-                    ch.send(doneEmbed);
-                    ch.overwritePermissions(member.id, {
-                        SEND_MESSAGES: false, READ_MESSAGE_HISTORY: true, READ_MESSAGES: true
-                    })
-                })
-            }
+})
+bot.on("messageReactionAdd", (reaction) => {
+    if(reaction.message.channel.name !== "apply") return;
+
+    const member = reaction.users.last();
+    const nickName = reaction.message.guild.members.get(member.id).username;
+    const user = nickName.toLowerCase().replace(/ /g, "-")
+
+    if(member.bot) return;
+    if(reaction.emoji.name === "🇭"){
+        reaction.remove(member);
+        if (reaction.emoji.guild.channels.some(c => [`ticket-${user}`].includes(c.name))){
+            return reaction.message.reply(`You already have a ticket open`).then(async msg => msg.delete(3000))
+        }
+        reaction.message.guild.createChannel(`ticket-${user}`).then(async ch => {
+            ch.setParent(`490358699651629069`)
+            ch.overwritePermissions(reaction.message.guild.id, {
+                VIEW_CHANNEL: false
+            })
+            ch.overwritePermissions(member.id, {
+                READ_MESSAGES: true, SEND_MESSAGES: true
+            })
+
+            let ApplicationEmbed = new Discord.RichEmbed()
+            .setDescription(`Welcome to your application ${member}.`)
+            .setColor("RANDOM")
+            ch.send(ApplicationEmbed)
         })
     }
-});
+})
 const events2 = {
     MESSAGE_REACTION_REMOVE: 'messageReactionRemove'
 };
