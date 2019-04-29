@@ -160,7 +160,7 @@ bot.on('message', async (message) => {
             ch.overwritePermissions(message.author.id, {
                 SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, READ_MESSAGES: true, VIEW_CHANNEL: true
             })
-            ch.overwritePermissions(message.author.id, {
+            ch.overwritePermissions(message.guild.id, {
                 VIEW_CHANNEL: false
             })
             let embed = new Discord.RichEmbed()
