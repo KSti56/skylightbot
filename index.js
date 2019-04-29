@@ -155,7 +155,7 @@ bot.on('message', async (message) => {
 
     if(message.channel.id == "490610018073182209"){
         message.delete();
-        message.guild.createChannel(message.author.username + "#" + message.author.discrminator).then(ch => {
+        message.guild.createChannel(message.author.username).then(ch => {
             ch.setParent("490615226014760960");
             ch.overwritePermissions(message.author.id, {
                 SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, READ_MESSAGES: true, VIEW_CHANNEL: true
